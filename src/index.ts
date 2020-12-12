@@ -55,6 +55,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
 
   const signUp = async (param: SignUpParams) => {
     setIsLoading(true)
+    setError('')
     try {
       const result = await Auth.signUp(param)
       setUser(result.user)
@@ -75,6 +76,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     code: string
   }) => {
     setIsLoading(true)
+    setError('')
     try {
       await Auth.confirmSignUp(username, code)
       await checkAuthenticated()
@@ -93,6 +95,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     password: string
   }) => {
     setIsLoading(true)
+    setError('')
     try {
       await Auth.signIn(username, password)
       await checkAuthenticated()
@@ -105,6 +108,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
 
   const signOut = async () => {
     setIsLoading(true)
+    setError('')
     try {
       await Auth.signOut()
       setUser(undefined)

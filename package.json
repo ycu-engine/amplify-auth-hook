@@ -2,7 +2,6 @@
   "name": "@ycu-engine/amplify-auth-hook",
   "version": "0.0.4",
   "description": "",
-  "main": "./dest/index.js",
   "module": "./dest/index.js",
   "typings": "./dest/index.d.ts",
   "files": [
@@ -13,6 +12,9 @@
     "postinstall": "typesync || :",
     "build": "tsc",
     "prepublishOnly": "yarn build"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "repository": {
     "type": "git",

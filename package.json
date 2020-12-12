@@ -1,10 +1,10 @@
 {
   "name": "@ycu-engine/amplify-auth-hook",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "dest/index.js",
   "files": [
-    "./dist"
+    "dist"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -35,5 +35,6 @@
     "aws-amplify": "^3.3.12",
     "react": "^17.0.1",
     "recoil": "^0.1.2"
-  }
+  },
+  "dependencies": {}
 }

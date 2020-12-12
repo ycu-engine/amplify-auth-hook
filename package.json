@@ -2,15 +2,17 @@
   "name": "@ycu-engine/amplify-auth-hook",
   "version": "0.0.6",
   "description": "",
-  "main": "./dest/index.js",
-  "typings": "./dest/index.d.ts",
+  "main": "common/index.js",
+  "module": "module/index.js",
+  "typings": "module/index.d.ts",
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "typesync || :",
-    "build": "tsc",
+    "build": "tsc -p ./tsconfig.json && tsc -p ./tsconfig.module.json",
     "prepublishOnly": "yarn build"
   },
   "publishConfig": {

@@ -2,7 +2,7 @@
   "name": "@ycu-engine/amplify-auth-hook",
   "version": "0.0.5",
   "description": "",
-  "module": "./dest/index.js",
+  "main": "./dest/index.js",
   "typings": "./dest/index.d.ts",
   "files": [
     "dist"

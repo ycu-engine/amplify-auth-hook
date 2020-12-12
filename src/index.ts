@@ -4,30 +4,30 @@ import { Amplify, Auth } from 'aws-amplify'
 import { useEffect } from 'react'
 import { atom, selector, useRecoilState, useRecoilValue } from 'recoil'
 
-export const IsLoadingAtom = atom<boolean>({
+export const AmplifyAuthIsLoadingAtom = atom<boolean>({
   key: '@ycu-engine/amplify-auth-hook/IsLoadingAtom',
   default: false
 })
-export const UserAtom = atom<CognitoUser | undefined>({
+export const AmplifyAuthUserAtom = atom<CognitoUser | undefined>({
   key: '@ycu-engine/amplify-auth-hook/UserAtom',
   default: undefined
 })
-export const ErrorAtom = atom<string>({
+export const AmplifyAuthErrorAtom = atom<string>({
   key: '@ycu-engine/amplify-auth-hook/ErrorAtom',
   default: ''
 })
-export const IsAuthenticatedSelector = selector<boolean>({
+export const AmplifyAuthIsAuthenticatedSelector = selector<boolean>({
   key: '@ycu-engine/amplify-auth-hook/IsAuthenticatedSelector',
-  get: ({ get }) => !!get(UserAtom)
+  get: ({ get }) => !!get(AmplifyAuthUserAtom)
 })
 
 export const useAmplifyAuth = (amplifyConfig: any) => {
   Amplify.configure(amplifyConfig)
 
-  const [isLoading, setIsLoading] = useRecoilState(IsLoadingAtom)
-  const [user, setUser] = useRecoilState(UserAtom)
-  const isAuthenticated = useRecoilValue(IsAuthenticatedSelector)
-  const [error, setError] = useRecoilState(ErrorAtom)
+  const [isLoading, setIsLoading] = useRecoilState(AmplifyAuthIsLoadingAtom)
+  const [user, setUser] = useRecoilState(AmplifyAuthUserAtom)
+  const isAuthenticated = useRecoilValue(AmplifyAuthIsAuthenticatedSelector)
+  const [error, setError] = useRecoilState(AmplifyAuthErrorAtom)
 
   const checkAuthenticated = async () => {
     setIsLoading(true)
@@ -128,10 +128,10 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
 }
 
 export const useReadOnlyAmplifyAuth = () => {
-  const isLoading = useRecoilValue(IsLoadingAtom)
-  const user = useRecoilValue(UserAtom)
-  const isAuthenticated = useRecoilValue(IsAuthenticatedSelector)
-  const error = useRecoilValue(ErrorAtom)
+  const isLoading = useRecoilValue(AmplifyAuthIsLoadingAtom)
+  const user = useRecoilValue(AmplifyAuthUserAtom)
+  const isAuthenticated = useRecoilValue(AmplifyAuthIsAuthenticatedSelector)
+  const error = useRecoilValue(AmplifyAuthErrorAtom)
 
   return {
     isLoading,

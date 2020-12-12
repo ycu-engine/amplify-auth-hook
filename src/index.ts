@@ -12,9 +12,9 @@ export const AmplifyAuthUserAtom = atom<CognitoUser | undefined>({
   key: '@ycu-engine/amplify-auth-hook/UserAtom',
   default: undefined
 })
-export const AmplifyAuthErrorAtom = atom<string>({
+export const AmplifyAuthErrorAtom = atom<any>({
   key: '@ycu-engine/amplify-auth-hook/ErrorAtom',
-  default: ''
+  default: null
 })
 export const AmplifyAuthIsAuthenticatedSelector = selector<boolean>({
   key: '@ycu-engine/amplify-auth-hook/IsAuthenticatedSelector',
@@ -55,7 +55,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
 
   const signUp = async (param: SignUpParams) => {
     setIsLoading(true)
-    setError('')
+    setError(null)
     try {
       const result = await Auth.signUp(param)
       setUser(result.user)
@@ -76,7 +76,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     code: string
   }) => {
     setIsLoading(true)
-    setError('')
+    setError(null)
     try {
       await Auth.confirmSignUp(username, code)
       await checkAuthenticated()
@@ -95,7 +95,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     password: string
   }) => {
     setIsLoading(true)
-    setError('')
+    setError(null)
     try {
       await Auth.signIn(username, password)
       await checkAuthenticated()
@@ -108,7 +108,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
 
   const signOut = async () => {
     setIsLoading(true)
-    setError('')
+    setError(null)
     try {
       await Auth.signOut()
       setUser(undefined)

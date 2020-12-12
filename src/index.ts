@@ -4,19 +4,19 @@ import { Amplify, Auth } from 'aws-amplify'
 import { useEffect } from 'react'
 import { atom, selector, useRecoilState, useRecoilValue } from 'recoil'
 
-const IsLoadingAtom = atom<boolean>({
+export const IsLoadingAtom = atom<boolean>({
   key: '@ycu-engine/amplify-auth-hook/IsLoadingAtom',
   default: false
 })
-const UserAtom = atom<CognitoUser | undefined>({
+export const UserAtom = atom<CognitoUser | undefined>({
   key: '@ycu-engine/amplify-auth-hook/UserAtom',
   default: undefined
 })
-const ErrorAtom = atom<string>({
+export const ErrorAtom = atom<string>({
   key: '@ycu-engine/amplify-auth-hook/ErrorAtom',
   default: ''
 })
-const IsAuthenticatedSelector = selector<boolean>({
+export const IsAuthenticatedSelector = selector<boolean>({
   key: '@ycu-engine/amplify-auth-hook/IsAuthenticatedSelector',
   get: ({ get }) => !!get(UserAtom)
 })

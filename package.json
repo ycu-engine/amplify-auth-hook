@@ -6,7 +6,8 @@
   "module": "module/index.js",
   "typings": "module/index.d.ts",
   "files": [
-    "dist"
+    "common",
+    "module"
   ],
   "sideEffects": false,
   "scripts": {

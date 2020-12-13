@@ -87,6 +87,18 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     }
   }
 
+  const resendSignUp = async ({ username }: { username: string }) => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      await Auth.resendSignUp(username)
+    } catch (error) {
+      setError(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const signIn = async ({
     username,
     password
@@ -127,7 +139,8 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     signUp,
     confirmSignUp,
     signIn,
-    signOut
+    signOut,
+    resendSignUp
   }
 }
 

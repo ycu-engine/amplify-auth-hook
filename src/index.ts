@@ -10,7 +10,8 @@ export const AmplifyAuthIsLoadingAtom = atom<boolean>({
 })
 export const AmplifyAuthUserAtom = atom<CognitoUser | undefined>({
   key: '@ycu-engine/amplify-auth-hook/UserAtom',
-  default: undefined
+  default: undefined,
+  dangerouslyAllowMutability: true
 })
 export const AmplifyAuthErrorAtom = atom<any>({
   key: '@ycu-engine/amplify-auth-hook/ErrorAtom',

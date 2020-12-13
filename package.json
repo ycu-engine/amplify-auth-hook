@@ -1,6 +1,6 @@
 {
   "name": "@ycu-engine/amplify-auth-hook",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "",
   "main": "common/index.js",
   "module": "module/index.js",

@@ -5,20 +5,24 @@ import { useEffect } from 'react'
 import { atom, selector, useRecoilState, useRecoilValue } from 'recoil'
 
 export const AmplifyAuthIsLoadingAtom = atom<boolean>({
-  key: '@ycu-engine/amplify-auth-hook/IsLoadingAtom',
+  key: '@ycu-engine/amplify-auth-hook/AmplifyAuthIsLoadingAtom',
   default: false
 })
 export const AmplifyAuthUserAtom = atom<CognitoUser | undefined>({
-  key: '@ycu-engine/amplify-auth-hook/UserAtom',
+  key: '@ycu-engine/amplify-auth-hook/AmplifyAuthUserAtom',
   default: undefined,
   dangerouslyAllowMutability: true
 })
 export const AmplifyAuthErrorAtom = atom<any>({
-  key: '@ycu-engine/amplify-auth-hook/ErrorAtom',
+  key: '@ycu-engine/amplify-auth-hook/AmplifyAuthErrorAtom',
   default: null
 })
+export const AmplifyAuthInitializedAtom = atom<boolean>({
+  key: '@ycu-engine/amplify-auth-hook/AmplifyAuthInitializedAtom',
+  default: false
+})
 export const AmplifyAuthIsAuthenticatedSelector = selector<boolean>({
-  key: '@ycu-engine/amplify-auth-hook/IsAuthenticatedSelector',
+  key: '@ycu-engine/amplify-auth-hook/AmplifyAuthIsAuthenticatedSelector',
   get: ({ get }) => !!get(AmplifyAuthUserAtom)
 })
 
@@ -29,6 +33,9 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
   const [user, setUser] = useRecoilState(AmplifyAuthUserAtom)
   const isAuthenticated = useRecoilValue(AmplifyAuthIsAuthenticatedSelector)
   const [error, setError] = useRecoilState(AmplifyAuthErrorAtom)
+  const [initialized, setInitialized] = useRecoilState(
+    AmplifyAuthInitializedAtom
+  )
 
   const checkAuthenticated = async () => {
     setIsLoading(true)
@@ -43,6 +50,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
       setUser(undefined)
     } finally {
       setIsLoading(false)
+      setInitialized(true)
     }
   }
   const currentAuthenticatedUser = async () => {
@@ -137,6 +145,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     user,
     isAuthenticated,
     error,
+    initialized,
     signUp,
     confirmSignUp,
     signIn,
@@ -150,11 +159,13 @@ export const useReadOnlyAmplifyAuth = () => {
   const user = useRecoilValue(AmplifyAuthUserAtom)
   const isAuthenticated = useRecoilValue(AmplifyAuthIsAuthenticatedSelector)
   const error = useRecoilValue(AmplifyAuthErrorAtom)
+  const initialized = useRecoilValue(AmplifyAuthInitializedAtom)
 
   return {
     isLoading,
     user,
     isAuthenticated,
-    error
+    error,
+    initialized
   }
 }

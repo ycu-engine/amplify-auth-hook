@@ -54,6 +54,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
   )
 
   const setUser = async (data: CognitoUser | undefined) => {
+    console.dir({ user, data })
     if (typeof user !== typeof data) return _setUser(data)
     if (typeof user !== 'undefined' && typeof data !== 'undefined') {
       const [session1, session2] = await Promise.all([
@@ -100,7 +101,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     setError(null)
     try {
       const result = await Auth.signUp(param)
-      setUser(result.user)
+      await setUser(result.user)
       setIsLoading(false)
       return result.user
     } catch (error) {
@@ -165,7 +166,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     setError(null)
     try {
       await Auth.signOut()
-      setUser(undefined)
+      await setUser(undefined)
     } catch (err) {
       setError(err)
     } finally {

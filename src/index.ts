@@ -61,7 +61,6 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
           getUserSession(user),
           getUserSession(data)
         ])
-        console.dir({ session1, session2 })
         if (
           session1.getAccessToken().getJwtToken() !==
           session2.getAccessToken().getJwtToken()

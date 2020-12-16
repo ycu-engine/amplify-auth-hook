@@ -1,5 +1,8 @@
 import type { SignUpParams } from '@aws-amplify/auth/lib-esm/types'
-import type { CognitoUser } from 'amazon-cognito-identity-js'
+import type {
+  CognitoUser,
+  CognitoUserSession
+} from 'amazon-cognito-identity-js'
 import { Amplify, Auth } from 'aws-amplify'
 import { useEffect } from 'react'
 import { atom, selector, useRecoilState, useRecoilValue } from 'recoil'
@@ -26,28 +29,57 @@ export const AmplifyAuthIsAuthenticatedSelector = selector<boolean>({
   get: ({ get }) => !!get(AmplifyAuthUserAtom)
 })
 
+const getUserSession = (user: CognitoUser): Promise<CognitoUserSession> => {
+  return new Promise((res, rej) => {
+    user.getSession((err: Error | null, session: null | CognitoUserSession) => {
+      if (session) {
+        res(session)
+        return
+      }
+      rej(err)
+      return
+    })
+  })
+}
+
 export const useAmplifyAuth = (amplifyConfig: any) => {
   Amplify.configure(amplifyConfig)
 
   const [isLoading, setIsLoading] = useRecoilState(AmplifyAuthIsLoadingAtom)
-  const [user, setUser] = useRecoilState(AmplifyAuthUserAtom)
+  const [user, _setUser] = useRecoilState(AmplifyAuthUserAtom)
   const isAuthenticated = useRecoilValue(AmplifyAuthIsAuthenticatedSelector)
   const [error, setError] = useRecoilState(AmplifyAuthErrorAtom)
   const [initialized, setInitialized] = useRecoilState(
     AmplifyAuthInitializedAtom
   )
 
+  const setUser = async (data: CognitoUser | undefined) => {
+    if (typeof user !== typeof data) return _setUser(data)
+    if (typeof user !== 'undefined' && typeof data !== 'undefined') {
+      const [session1, session2] = await Promise.all([
+        getUserSession(user),
+        getUserSession(data)
+      ])
+      if (
+        session1.getAccessToken().getJwtToken() !==
+        session2.getAccessToken().getJwtToken()
+      ) {
+        _setUser(data)
+      }
+    }
+  }
+
   const checkAuthenticated = async () => {
     setIsLoading(true)
     try {
       const data = await Auth.currentSession()
       if (!data) {
-        setUser(undefined)
+        await setUser(undefined)
       } else {
         await currentAuthenticatedUser()
       }
     } catch {
-      setUser(undefined)
+      await setUser(undefined)
     } finally {
       setIsLoading(false)
       setInitialized(true)
@@ -55,7 +87,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
   }
   const currentAuthenticatedUser = async () => {
     const user: CognitoUser = await Auth.currentAuthenticatedUser()
-    setUser(user)
+    await setUser(user)
   }
 
   useEffect(() => {

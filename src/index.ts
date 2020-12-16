@@ -200,7 +200,8 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     signIn,
     signOut,
     resendSignUp,
-    federatedSignIn
+    federatedSignIn,
+    checkAuthenticated
   }
 }
 

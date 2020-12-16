@@ -1,4 +1,7 @@
-import type { SignUpParams } from '@aws-amplify/auth/lib-esm/types'
+import type {
+  FederatedSignInOptions,
+  SignUpParams
+} from '@aws-amplify/auth/lib-esm/types'
 import type {
   CognitoUser,
   CognitoUserSession
@@ -161,6 +164,18 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     }
   }
 
+  const federatedSignIn = async (options?: FederatedSignInOptions) => {
+    setIsLoading(true)
+    try {
+      await Auth.federatedSignIn(options)
+      await currentAuthenticatedUser()
+    } catch (err) {
+      setError(err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const signOut = async () => {
     setIsLoading(true)
     setError(null)
@@ -184,7 +199,8 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     confirmSignUp,
     signIn,
     signOut,
-    resendSignUp
+    resendSignUp,
+    federatedSignIn
   }
 }
 

@@ -53,22 +53,23 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     AmplifyAuthInitializedAtom
   )
 
-  const setUser = async (data: CognitoUser | undefined) => {
-    console.dir({ user, data })
-    if (typeof user !== typeof data) return _setUser(data)
-    if (typeof user !== 'undefined' && typeof data !== 'undefined') {
-      const [session1, session2] = await Promise.all([
-        getUserSession(user),
-        getUserSession(data)
-      ])
-      console.dir({ session1, session2 })
-      if (
-        session1.getAccessToken().getJwtToken() !==
-        session2.getAccessToken().getJwtToken()
-      ) {
-        _setUser(data)
+  const setUser = (data: CognitoUser | undefined) => {
+    process.nextTick(async () => {
+      if (typeof user !== typeof data) return _setUser(data)
+      if (typeof user !== 'undefined' && typeof data !== 'undefined') {
+        const [session1, session2] = await Promise.all([
+          getUserSession(user),
+          getUserSession(data)
+        ])
+        console.dir({ session1, session2 })
+        if (
+          session1.getAccessToken().getJwtToken() !==
+          session2.getAccessToken().getJwtToken()
+        ) {
+          _setUser(data)
+        }
       }
-    }
+    })
   }
 
   const checkAuthenticated = async () => {
@@ -76,12 +77,12 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     try {
       const data = await Auth.currentSession()
       if (!data) {
-        await setUser(undefined)
+        setUser(undefined)
       } else {
         await currentAuthenticatedUser()
       }
     } catch {
-      await setUser(undefined)
+      setUser(undefined)
     } finally {
       setIsLoading(false)
       setInitialized(true)
@@ -89,7 +90,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
   }
   const currentAuthenticatedUser = async () => {
     const user: CognitoUser = await Auth.currentAuthenticatedUser()
-    await setUser(user)
+    setUser(user)
   }
 
   useEffect(() => {
@@ -101,7 +102,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     setError(null)
     try {
       const result = await Auth.signUp(param)
-      await setUser(result.user)
+      setUser(result.user)
       setIsLoading(false)
       return result.user
     } catch (error) {
@@ -166,7 +167,7 @@ export const useAmplifyAuth = (amplifyConfig: any) => {
     setError(null)
     try {
       await Auth.signOut()
-      await setUser(undefined)
+      setUser(undefined)
     } catch (err) {
       setError(err)
     } finally {
